@@ -14,9 +14,26 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class UStarInfo {
 
+    private enum ExitCode {
+
+        EXIT_SUCCESS(0),
+        EXIT_FAILURE(1);
+
+        private final int code;
+
+        private ExitCode(int i) {
+            code = i;
+        }
+
+        public int getValue() {
+            return code;
+        }
+    }
+
     private static final String format = "%18s: %s%n";
     private static final String formatChkSum = "%18s: %06o%n";
     private static final String formatHeaderOffset = "%18s: %s  dec.  %<H hex%n";
+    private static ExitCode exitCode = ExitCode.EXIT_SUCCESS;
 
     /**
      * Main method.
@@ -50,12 +67,16 @@ public class UStarInfo {
 
                 if (!(header.isPosix() || header.isGnu())) {
                     System.out.println("ERROR: UStar magic string was not found in this block");
+                    exitCode = ExitCode.EXIT_FAILURE;
                     break;
                 }
 
                 currentOffset += nextHeaderOffset(header);
                 System.out.println();
             }
+        }
+        if (exitCode != ExitCode.EXIT_SUCCESS) {
+            System.exit(exitCode.getValue());
         }
     }
 
@@ -75,11 +96,13 @@ public class UStarInfo {
         System.out.printf(format, "size (octal)", header.getFileSize());
         String mtimeStr = formatMTime(header.getMtime());
         if (mtimeStr.isEmpty()) {
+            exitCode = ExitCode.EXIT_FAILURE;
             mtimeStr = "ERROR: mtime field is invalid " + header.getMtime();
         }
         System.out.printf(format, "mtime", mtimeStr);
         System.out.printf(format, "checksum (header)", header.getHeaderChecksum());
         if (!checkSumIsValid(header.getHeaderChecksum(), checksum)) {
+            exitCode = ExitCode.EXIT_FAILURE;
             System.out.println("ERROR: checksum in the header block is not equal to the computed ones");
             System.out.printf(format, "checksum unsigned", checksum.getUnSignedOctal());
             System.out.printf(format, "checksum signed", checksum.getSignedOctal());
