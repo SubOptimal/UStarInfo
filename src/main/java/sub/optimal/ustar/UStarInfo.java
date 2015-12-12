@@ -30,9 +30,10 @@ public class UStarInfo {
         }
     }
 
-    private static final String format = "%18s: %s%n";
-    private static final String formatChkSum = "%18s: %06o%n";
-    private static final String formatHeaderOffset = "%18s: %s  dec.  %<H hex%n";
+    private static final String formatField = "%18s:";
+    private static final String format = formatField + " %s%n";
+    private static final String formatComputedChecksum = formatField + " unsigned: %s  signed: %s%n";
+    private static final String formatHeaderOffset = formatField + " %s  dec.  %<H hex.%n";
     private static ExitCode exitCode = ExitCode.EXIT_SUCCESS;
 
     /**
@@ -59,7 +60,7 @@ public class UStarInfo {
 
                 byte[] headerBytes = readHeaderBlock(ra);
                 if (blockIsEpmty(headerBytes)) {
-                    System.out.printf("empty block reached %d byte(s) before end", fileSize - currentOffset);
+                    System.out.printf("empty block reached %d byte(s) before end%n", fileSize - currentOffset);
                     break;
                 }
                 Header header = Header.getInstance(headerBytes);
@@ -97,15 +98,20 @@ public class UStarInfo {
         String mtimeStr = formatMTime(header.getMtime());
         if (mtimeStr.isEmpty()) {
             exitCode = ExitCode.EXIT_FAILURE;
-            mtimeStr = "ERROR: mtime field is invalid " + header.getMtime();
+            System.out.printf(format, "mtime", "ERROR: mtime is not a valid octal number " + header.getMtime());
+        } else {
+            System.out.printf(format, "mtime", mtimeStr);
         }
-        System.out.printf(format, "mtime", mtimeStr);
-        System.out.printf(format, "checksum (header)", header.getHeaderChecksum());
         if (!checkSumIsValid(header.getHeaderChecksum(), checksum)) {
             exitCode = ExitCode.EXIT_FAILURE;
-            System.out.println("ERROR: checksum in the header block is not equal to the computed ones");
-            System.out.printf(format, "checksum unsigned", checksum.getUnSignedOctal());
-            System.out.printf(format, "checksum signed", checksum.getSignedOctal());
+            System.out.printf(format, "checksum (header)",
+                    "ERROR: checksum in the header "
+                    + header.getHeaderChecksum()
+                    + " is not equal to the computed");
+            System.out.printf(formatComputedChecksum, "checksum computed",
+                    checksum.getUnSignedOctal(), checksum.getSignedOctal());
+        } else {
+            System.out.printf(format, "checksum (header)", header.getHeaderChecksum());
         }
         System.out.printf(format, "typeFlag", header.getTypeFlag());
         System.out.printf(format, "link name", header.getLinkName());
