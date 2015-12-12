@@ -1,4 +1,4 @@
-UStarInfo 0.0.1
+UStarInfo 0.0.2
 ===============
 
 The aim of this tool is to print the information from the tar headers. This is especially helpful in cases where you need to restore a tar archive but tar refuses to process it.
