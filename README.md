@@ -9,7 +9,6 @@ The aim of this tool is to print the information from the tar headers. This is e
 $ file somefile.tar someother.tar
 somefile.tar : POSIX tar archive
 someother.tar: POSIX tar archive (GNU)
-
 ```
 ... but later on tar refuse to process it.
 
@@ -25,7 +24,7 @@ The error message doesn't explain in detail what's wrong. The most probable reas
 This tool display the header information of all entries and helps to indentify such cases. An error is reported if:
 
  - the computed checksum doesn't match the one reported in the header
- - the last modification time is invalid.
+ - the last modification time is invalid
 
 Usage
 -----
@@ -43,11 +42,9 @@ Usage
           owner ID: 0001750
           group ID: 0001750
       size (octal): 00000003144
-             mtime: ERROR: mtime field is invalid 12345678123
- checksum (header): 013517
-ERROR: checksum in the header block is not equal to the computed ones
- checksum unsigned: 013534
-   checksum signed: 013534
+             mtime: ERROR: mtime is not a valid octal number 82633110307
+ checksum (header): ERROR: checksum in the header 013511 is not equal to the computed
+ checksum computed: unsigned: 013520  signed: 013520
           typeFlag: 0
          link name: 
         owner name: suboptimal
