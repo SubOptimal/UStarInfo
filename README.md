@@ -67,3 +67,12 @@ mvn clean package
 ```
 
 After the build the executable jar is placed in the `target/` directory.
+
+Running on example tar files
+----------------------------
+
+```
+cd samples/
+./create_samples.sh  # create valid and invalid tar file samples
+./run_samples.sh     # execute UStarInfo on the created tar file samples
+```
