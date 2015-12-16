@@ -102,7 +102,7 @@ public class UStarInfo {
         } else {
             System.out.printf(format, "mtime", mtimeStr);
         }
-        if (!checkSumIsValid(header.getHeaderChecksum(), checksum)) {
+        if (!isValidCheckSum(header.getHeaderChecksum(), checksum)) {
             exitCode = ExitCode.EXIT_FAILURE;
             System.out.printf(format, "checksum (header)",
                     "ERROR: checksum in the header "
@@ -198,7 +198,7 @@ public class UStarInfo {
      * @return {@code true} the checksum in the header and one of the cmputed
      * checksums are equal
      */
-    private static boolean checkSumIsValid(String headerChecksum, HeaderChecksum checksum) {
+    private static boolean isValidCheckSum(String headerChecksum, HeaderChecksum checksum) {
         return headerChecksum.equals(checksum.getUnSignedOctal())
                 || headerChecksum.equals(checksum.getSignedOctal());
     }
