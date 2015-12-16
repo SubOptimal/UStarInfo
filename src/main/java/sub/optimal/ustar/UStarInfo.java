@@ -91,7 +91,13 @@ public class UStarInfo {
         System.out.printf(format, "format", getTarFormat(header));
         System.out.printf(format, "UStar version", header.getUstarVersion());
         System.out.printf(format, "file name", header.getFileName());
-        System.out.printf(format, "file mode", header.getFileMode());
+        if (isValidFileMode(header.getFileMode())) {
+            System.out.printf(format, "file mode", header.getFileMode());
+        } else {
+            System.out.printf(format, "file mode",
+                    "ERROR: octal file mode must be between 0000000 and 0007777: "
+                    + header.getFileMode());
+        }
         System.out.printf(format, "owner ID", header.getOwnerID());
         System.out.printf(format, "group ID", header.getGroupID());
         System.out.printf(format, "size (octal)", header.getFileSize());
@@ -201,6 +207,16 @@ public class UStarInfo {
     private static boolean isValidCheckSum(String headerChecksum, HeaderChecksum checksum) {
         return headerChecksum.equals(checksum.getUnSignedOctal())
                 || headerChecksum.equals(checksum.getSignedOctal());
+    }
+
+    /**
+     * Check if the octal file mode is in the valid range.
+     *
+     * @param fileModeOctal the file mode in octal digits
+     * @return {@code true} file mode is valid, otherwise {@code false}
+     */
+    private static boolean isValidFileMode(String fileModeOctal) {
+        return fileModeOctal.matches("000[0-7]{4}");
     }
 
     /**

@@ -1,7 +1,7 @@
 UStarInfo 0.0.2
 ===============
 
-The aim of this tool is to print the information from the tar headers. This is especially helpful in cases where you need to restore a tar archive but tar refuses to process it.
+The aim of this tool is to print the information from the tar headers. This is especially helpful in cases where you need to restore a tar archive but tar refuses to process it. Other applications might also refuse to treat the file as a valid tar archive (e.g. [mc's](https://github.com/MidnightCommander/mc/issues/55) does not open it, when you press ENTER on the selected file).
 
 `file` probably identifies the file as a tar archive ...
 
@@ -21,8 +21,9 @@ tar: Exiting with failure status due to previous errors
 
 The error message doesn't explain in detail what's wrong. The most probable reason is, that the checksum of the header block doesn't match with the header data. 
 
-This tool display the header information of all entries and helps to indentify such cases. An error is reported if:
+This tool display the header information of all entries and helps to identify such cases. An error is reported if:
 
+ - the file mode (octal) is not in the valid range between 0000 and 7777
  - the computed checksum doesn't match the one reported in the header
  - the last modification time is invalid
 
