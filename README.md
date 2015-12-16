@@ -1,4 +1,4 @@
-UStarInfo 0.0.2
+UStarInfo 0.0.3
 ===============
 
 The aim of this tool is to print the information from the tar headers. This is especially helpful in cases where you need to restore a tar archive but tar refuses to process it. Other applications might also refuse to treat the file as a valid tar archive (e.g. [mc's](https://github.com/MidnightCommander/mc/issues/55) does not open it, when you press ENTER on the selected file).
